@@ -1,7 +1,7 @@
 package plugin
 
 import (
-	"github.com/651016236/pos-plugin/ptools"
+	"github.com/651016236/pos-plugin/plugin/ptools"
 	"github.com/gogf/gf/net/ghttp"
 )
 
