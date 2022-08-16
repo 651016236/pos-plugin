@@ -1,4 +1,4 @@
-package plugin
+package pos_plugin
 
 import (
 	"testing"

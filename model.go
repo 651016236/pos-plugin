@@ -1,4 +1,4 @@
-package plugin
+package pos_plugin
 
 type InstallYaml struct {
 	ID          string `json:"id"`
