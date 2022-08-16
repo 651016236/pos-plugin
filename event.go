@@ -30,7 +30,7 @@ func GetData(key string) interface{} {
 
 func EventOn(name string, evt func(e event.Event) error, sync ...bool) {
 	e := EventInfo{
-		PluginId: "",
+		PluginId: PluginId,
 		Event:    name,
 		Sync:     false,
 	}
@@ -45,7 +45,7 @@ func EventOn(name string, evt func(e event.Event) error, sync ...bool) {
 
 func EventRegisterMaster() {
 	if MasterPort > 0 {
-		if ret, err := g.Client().Post("http://localhost:"+gconv.String(MasterPort)+"/event/register", eventList); err != nil {
+		if ret, err := g.Client().Post("http://localhost:"+gconv.String(MasterPort)+"/plugin_new/event/register", eventList); err != nil {
 			g.Log().Info("获取主程序配置错误", err)
 		} else {
 			g.Log().Info("设置主程序数据库配置成功", ret.ReadAllString())
