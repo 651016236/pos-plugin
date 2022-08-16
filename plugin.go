@@ -12,13 +12,18 @@ import (
 )
 
 var PluginId string
+var PluginPort int
 
-func Init(pluginId string, masterPort int, s *ghttp.Server) {
+func Init(pluginId string, masterPort, pluginPort int, s *ghttp.Server) {
+	// 主程序端口
 	MasterPort = masterPort
-	// 获取主程序数据
-	_ = getMasterInfo()
 	// 初始化插件Id
 	PluginId = pluginId
+	// 初始化插件端口
+	PluginPort = pluginPort
+	// 获取主程序数据
+	_ = getMasterInfo()
+
 	// 初始化插件路由
 	s.Group("/", func(group *ghttp.RouterGroup) {
 		group.POST("/event", EventService.CallEvent)
