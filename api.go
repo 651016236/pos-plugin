@@ -1,8 +1,8 @@
 package pos_plugin
 
 import (
-	"github.com/651016236/pos-plugin/ptools"
 	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/util/gconv"
 )
 
 var EventService = EventApi{}
@@ -12,5 +12,5 @@ type EventApi struct{}
 func (*EventApi) CallEvent(r *ghttp.Request) {
 	d := r.GetBodyString()
 	ret := CallEvent(d)
-	ptools.Success(r, ret)
+	_ = r.Response.WriteJsonExit(gconv.String(ret))
 }

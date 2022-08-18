@@ -1,12 +1,5 @@
 package pos_plugin
 
-type InstallYaml struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Path        string `json:"path"`
-}
-
 type MasterInfo struct {
 	DbConfig DbConfig `json:"db_config"`
 }
@@ -21,6 +14,7 @@ type EventInfo struct {
 	PluginId string `json:"plugin_id"`
 	Event    string `json:"event"`
 	Sync     bool   `json:"sync"`
+	Port     int    `json:"port"`
 }
 
 // DbConfig 数据库配置结构
@@ -32,5 +26,10 @@ type DbConfig struct {
 	Name string `json:"name"`
 }
 
-// MasterPort 主程序端口号
-var MasterPort int
+// EventCallback 事件回调结构体
+type EventCallback struct {
+	Stop    bool        `json:"stop"`     // 回调后直接return，不调用后面的方法
+	Data    interface{} `json:"data"`     // 回调后的数据
+	ExtData interface{} `json:"ext_data"` // 回调后的扩展数据
+	Over    bool        `json:"over"`     // 是否覆盖数据
+}

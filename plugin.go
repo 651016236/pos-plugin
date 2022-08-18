@@ -9,11 +9,20 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/util/gconv"
+	"time"
 )
 
 var PluginId string
 var PluginPort int
 
+// MasterPort 主程序端口号
+var MasterPort int
+
+// Init 		初始化插件
+// pluginId 	插件ID
+// masterPort 	主程序端口号
+// pluginPort 	插件端口号
+// s 		  	插件server
 func Init(pluginId string, masterPort, pluginPort int, s *ghttp.Server) {
 	// 主程序端口
 	MasterPort = masterPort
@@ -30,10 +39,10 @@ func Init(pluginId string, masterPort, pluginPort int, s *ghttp.Server) {
 	})
 }
 
-// 获取主程序配置项
+// getMasterInfo 获取主程序配置项
 func getMasterInfo() error {
 	if MasterPort > 0 {
-		if ret, err := g.Client().Get("http://localhost:"+gconv.String(MasterPort)+"/master/info", `{"sign":"1111"}`); err != nil {
+		if ret, err := g.Client().Timeout(30*time.Second).Get("http://localhost:"+gconv.String(MasterPort)+"/master/info", `{"sign":"1111"}`); err != nil {
 			return err
 		} else {
 			loadJson, _ := gjson.LoadJson(ret.ReadAllString())
