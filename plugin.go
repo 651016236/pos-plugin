@@ -17,19 +17,24 @@ var PluginPort int
 
 // MasterPort 主程序端口号
 var MasterPort int
+var MasterHost string
 
 // Init 		初始化插件
 // pluginId 	插件ID
 // masterPort 	主程序端口号
 // pluginPort 	插件端口号
 // s 		  	插件server
-func Init(pluginId string, masterPort, pluginPort int, s *ghttp.Server) {
+func Init(pluginId string, masterPort, pluginPort int, s *ghttp.Server, mh ...string) {
 	// 主程序端口
 	MasterPort = masterPort
 	// 初始化插件Id
 	PluginId = pluginId
 	// 初始化插件端口
 	PluginPort = pluginPort
+	MasterHost = "localhost"
+	if len(mh) > 0 {
+		MasterHost = mh[0]
+	}
 	// 获取主程序数据
 	_ = getMasterInfo()
 
@@ -42,7 +47,7 @@ func Init(pluginId string, masterPort, pluginPort int, s *ghttp.Server) {
 // getMasterInfo 获取主程序配置项
 func getMasterInfo() error {
 	if MasterPort > 0 {
-		if ret, err := g.Client().Timeout(30*time.Second).Get("http://localhost:"+gconv.String(MasterPort)+"/master/info", `{"sign":"1111"}`); err != nil {
+		if ret, err := g.Client().Timeout(30*time.Second).Get("http://"+MasterHost+":"+gconv.String(MasterPort)+"/master/info", `{"sign":"1111"}`); err != nil {
 			return err
 		} else {
 			loadJson, _ := gjson.LoadJson(ret.ReadAllString())

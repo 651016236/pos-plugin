@@ -69,7 +69,7 @@ func EventRegisterMaster() {
 	if MasterPort > 0 {
 		jsonStr, _ := json.Marshal(eventList)
 		g.Log().Info(string(jsonStr))
-		if ret, err := g.Client().Post("http://localhost:"+gconv.String(MasterPort)+"/plugin_new/event/register", string(jsonStr)); err != nil {
+		if ret, err := g.Client().Post("http://"+MasterHost+":"+gconv.String(MasterPort)+"/plugin_new/event/register", string(jsonStr)); err != nil {
 			g.Log().Info("获取主程序配置错误", err)
 		} else {
 			g.Log().Info("设置主程序数据库配置成功", ret.ReadAllString())
