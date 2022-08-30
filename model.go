@@ -2,6 +2,17 @@ package pos_plugin
 
 type MasterInfo struct {
 	DbConfig DbConfig `json:"db_config"`
+	DataInfo DataInfo `json:"data_info"`
+}
+
+// 公共数据信息
+type DataInfo struct {
+	BusinessDay string `json:"business_day"`  // 营业日 Y-m-d
+	PosUserName string `json:"pos_user_name"` // 收银员名称
+	TerminalNo  string `json:"terminal_no"`   // 机器编号
+	BranchNo    string `json:"branch_no"`     // 门店编号
+	BranchName  string `json:"branch_name"`   // 门店名称
+	PageSize    int    `json:"page_size"`     // 纸张大小
 }
 
 type EventKV struct {

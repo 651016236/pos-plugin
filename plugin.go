@@ -14,6 +14,8 @@ import (
 
 var PluginId string
 var PluginPort int
+var MasterData MasterInfo
+var MasterDataStr string
 
 // MasterPort 主程序端口号
 var MasterPort int
@@ -50,19 +52,21 @@ func getMasterInfo() error {
 		if ret, err := g.Client().Timeout(30*time.Second).Get("http://"+MasterHost+":"+gconv.String(MasterPort)+"/master/info", `{"sign":"1111"}`); err != nil {
 			return err
 		} else {
-			loadJson, _ := gjson.LoadJson(ret.ReadAllString())
+			MasterDataStr = ret.ReadAllString()
+			loadJson, _ := gjson.LoadJson(MasterDataStr)
 			data := loadJson.GetString("data")
 			body := AesDecode(data)
-			masterInfo := MasterInfo{}
-			_ = json.Unmarshal([]byte(body), &masterInfo)
+			MasterData = MasterInfo{}
+			_ = json.Unmarshal([]byte(body), &MasterData)
+
 			gdb.SetConfig(gdb.Config{
 				"default": gdb.ConfigGroup{
 					gdb.ConfigNode{
-						Host:             masterInfo.DbConfig.Host,
-						Port:             masterInfo.DbConfig.Port,
-						User:             masterInfo.DbConfig.User,
-						Pass:             masterInfo.DbConfig.Pass,
-						Name:             masterInfo.DbConfig.Name,
+						Host:             MasterData.DbConfig.Host,
+						Port:             MasterData.DbConfig.Port,
+						User:             MasterData.DbConfig.User,
+						Pass:             MasterData.DbConfig.Pass,
+						Name:             MasterData.DbConfig.Name,
 						Type:             "mysql",
 						Role:             "master",
 						MaxOpenConnCount: 5,
