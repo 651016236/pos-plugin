@@ -8,6 +8,8 @@ import (
 	"github.com/gogf/gf/encoding/gjson"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/os/gproc"
+	"github.com/gogf/gf/os/gtimer"
 	"github.com/gogf/gf/util/gconv"
 	"time"
 )
@@ -37,6 +39,16 @@ func Init(pluginId string, masterPort, pluginPort int, s *ghttp.Server, mh ...st
 	if len(mh) > 0 {
 		MasterHost = mh[0]
 	}
+
+	ppid := gproc.PPid()
+	// 先设置为0防止启动讲主程序杀死
+	//g.Log().Info("pid=", gproc.PPid(), ",isChild=", gproc.IsChild())
+	gproc.SetPPid(0)
+	//g.Log().Info("pid=", gproc.PPid(), ",isChild=", gproc.IsChild())
+	gtimer.AddOnce(3*time.Second, func() {
+		gproc.SetPPid(ppid)
+	})
+
 	// 获取主程序数据
 	_ = getMasterInfo()
 
