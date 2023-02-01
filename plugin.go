@@ -11,6 +11,7 @@ import (
 	"github.com/gogf/gf/os/gproc"
 	"github.com/gogf/gf/os/gtimer"
 	"github.com/gogf/gf/util/gconv"
+	"github.com/gookit/event"
 	"time"
 )
 
@@ -49,12 +50,25 @@ func Init(pluginId string, masterPort, pluginPort int, s *ghttp.Server, mh ...st
 		gproc.SetPPid(ppid)
 	})
 
+	// 添加营业日更新事件
+	addBusinessDayEvent()
+
 	// 获取主程序数据
 	_ = getMasterInfo()
 
 	// 初始化插件路由
 	s.Group("/", func(group *ghttp.RouterGroup) {
 		group.POST("/event", EventService.CallEvent)
+	})
+}
+
+// 添加营业日更新事件
+func addBusinessDayEvent() {
+	EventOn("cart.order.afterReplaceDay", func(e event.Event) error {
+		data := e.Get("data")
+		_ = getMasterInfo()
+		SetCallback(e, data, "", false)
+		return nil
 	})
 }
 
